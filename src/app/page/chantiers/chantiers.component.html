@@ -1,0 +1,101 @@
+<div class="chantier-container">
+  <div class="content-container">
+    <div class="top-bar">
+      <h1 class="page-title advanced-title">Liste des chantiers</h1>
+    </div>
+
+    <div *ngIf="displayedChantiers && displayedChantiers.length === 0" class="no-chantiers-message">
+      <p>Aucun chantier pour le moment</p>
+    </div>
+
+    <div class="chantier-grid" *ngIf="displayedChantiers && displayedChantiers.length > 0">
+      <div class="chantier-card" *ngFor="let chantier of displayedChantiers">
+        <div class="card-header" (click)="navigateToChantierDetail(chantier)">
+          <div class="icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="title">{{ chantier.titre }}</div>
+        </div>
+        <div class="card-content">
+          <div class="info-line">
+            <span class="label">Localisation :</span>
+            <span class="value">{{ chantier.localisation }}</span>
+          </div>
+          <div class="info-line">
+            <span class="label">Client :</span>
+            <span class="value">{{ chantier.client }}</span>
+          </div>
+          <div class="info-line">
+            <span class="label">Total du marché :</span>
+            <span class="value">{{ chantier.coutTotal }} €</span>
+          </div>
+          <div class="info-line">
+            <span class="label">Date de démarrage :</span>
+            <span class="value"> {{ chantier.dateDeDebut !== '-' ? (chantier.dateDeDebut | date:'dd/MM/yyyy') : '-' }}</span>
+          </div>
+          <div class="info-line">
+            <span class="label">Cumul part Beehive :</span>
+            <span class="value">{{ chantier.cumulPartBeehive}} €</span>
+          </div>
+        
+        </div>
+        <div class="card-footer">
+          <div class="status-dropdown" [ngClass]="{'open': chantier.isDropdownOpen}">
+            <button class="status-button" 
+                    [ngClass]="{
+                      'termine': chantier.statut === 'termine', 
+                      'en-cours': chantier.statut === 'en_cours', 
+                      'en-pause': chantier.statut === 'en_pause'
+                    }" 
+                    (click)="toggleDropdown(chantier)">
+              {{ getStatusLabel(chantier.statut) }}
+              <i class="fas fa-chevron-down" *ngIf="(role === 'Administrateur' || role === 'Chargé commercial')"></i>
+            </button>
+            <div class="dropdown-content" *ngIf="(role === 'Administrateur' || role === 'Chargé commercial')">
+              <a (click)="changeStatus(chantier.id, 'termine')">Terminé</a>
+              <a (click)="changeStatus(chantier.id, 'en_cours')">En cours</a>
+              <a (click)="changeStatus(chantier.id, 'en_pause')">En pause</a>
+            </div>
+          </div>
+          <button class="edit-button"  (click)="chantier.id && openModifyModal(chantier.id)"  *ngIf="(role === 'Administrateur' || role === 'Chargé commercial')">
+            <i class="fas fa-pencil-alt" ></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination" *ngIf="displayedChantiers && displayedChantiers.length > 0">
+      <span>Page</span>
+      <button class="page-arrow" [disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        <
+      </button>
+      <span class="page-number current">{{ currentPage }}</span>
+      <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+        >
+      </button>
+    </div>
+    <!-- the ModifyChantierComponent modal -->
+    <app-modify-chantier
+      *ngIf="showModifyModal"
+      [chantierId]="selectedChantierId"
+      (close)="closeModifyModal()"
+      (chantierUpdated)="onChantierUpdated()"
+    ></app-modify-chantier>
+    <!-- Success Modal for Modification -->
+    <div *ngIf="isSuccessModified" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le chantier a été modifié avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+     
+  </div>
+</div>

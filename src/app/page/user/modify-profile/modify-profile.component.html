@@ -1,0 +1,107 @@
+<div class="app-container">
+    <div class="main-content">
+      <h1>Profil</h1>
+      <p class="subtitle">Gérez vos informations personnelles.</p>
+  
+      <div class="profile-container">
+
+        <!-- En-tête du profil -->
+        <div class="profile-header">
+          <div class="profile-picture">
+            <img [src]="selectedProfilePicture" alt="Profile" />
+          </div>
+          <div class="user-info">
+            
+            <p>{{userRole}}</p>
+            <input 
+            type="file" 
+            #fileInput 
+            (change)="onFileSelected($event)" 
+            accept="image/jpeg,image/png,image/gif,image/jpg" 
+            style="display: none;"
+          />
+            <button class="upload-btn" (click)="fileInput.click()">Téléverser une photo</button>
+          </div>
+        </div>
+  
+        <!-- Formulaire d'informations personnelles -->
+        <div class="form-container">
+          <h3>Informations personnelles</h3>
+          <form  [formGroup]="profileForm" 
+          (ngSubmit)="onSubmit()">
+            <div class="form-group name-row">
+              <div class="name-field">
+                <label for="nom">Nom</label>
+                <input  class="np" type="text" id="nom" formControlName="nom"  placeholder="Entrez votre nom" (click)="clearMessages()" />
+              </div>
+              <div class="name-field">
+                <label for="prenom">Prénom</label>
+                <input  class="np" type="text" id="prenom"  formControlName="prenom"  placeholder="Entrez votre prénom" (click)="clearMessages()"/>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="gender">Genre</label>
+              <select id="gender" formControlName="gender" (click)="clearMessages()">
+                <option value="" disabled selected>Choisissez votre genre</option>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label for="country">Sélectionnez votre Pays</label>
+              <select id="country" formControlName="country" (click)="clearMessages()">
+                <option value="" disabled selected>Choisissez votre Pays</option>
+                <option value="France">France</option>
+                <option value="Tunisie">Tunisie</option>
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label for="phone">Numéro de téléphone</label>
+              <div class="phone-input-wrapper">
+                <div class="country-code-select">
+                  <button
+      type="button"
+      class="country-code-button"
+      (click)="toggleCountryCodeDropdown()"
+    >
+      <img [src]="selectedCountryCode.flag"  class="flag-icon">
+      {{ selectedCountryCode.code }}
+    </button>
+    <div 
+    class="country-code-dropdown" 
+    *ngIf="isCountryCodeDropdownOpen"
+  >
+    <div 
+      *ngFor="let country of countryCodes" 
+      class="country-code-item"
+      (click)="selectCountryCode(country)"
+    >
+    <img [src]="country.flag"  class="flag-icon">
+       {{ country.code }} 
+    </div>
+  </div>
+</div>
+              <input type="tel" id="phone" formControlName="phoneNumber"  class="tel" placeholder="Entrez votre numéro de téléphone" (click)="clearMessages()" />
+            </div>
+            </div>
+  
+            <button type="submit" class="submit-btn">Enregistrer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="toast-container">
+      <div *ngIf="updateSuccess" class="toast-message toast-success">
+        <span>Vos informations ont été modifiées avec succès</span>
+        <button class="toast-close" (click)="clearMessages()">&times;</button>
+      </div>
+      <div *ngIf="updateError" class="toast-message toast-error">
+        <span>{{ updateErrorMessage }}</span>
+        <button class="toast-close" (click)="clearMessages()">&times;</button>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,106 @@
+<div class="situation-form-container">
+    <div class="form-header">
+      <h2>Modifier la situation</h2>
+      <button class="close-btn" (click)="onCancel()">✕</button>
+    </div>
+  
+    <form [formGroup]="situationForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nomSituation">Nom du Situation <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="nomSituation" 
+            formControlName="nomSituation"
+            placeholder="Entrez un nom"
+          >
+        </div>
+  
+        <div class="form-group">
+          <label for="dateSituation">Date de la situation <span class="required">*</span></label>
+          <input 
+            type="date" 
+            id="dateSituation" 
+            formControlName="dateSituation"
+          >
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="montantGlobal">Montant global <span class="required">*</span></label>
+          <input 
+            placeholder="Entrez le montant global"
+            id="montantGlobal" 
+            formControlName="montantGlobal"
+          >
+        </div>
+  
+        <div class="form-group">
+          <label for="montantNet">Charge du situation <span class="required">*</span></label>
+          <input 
+            placeholder="Entrez le charge du situation"
+            id="montantNet" 
+            formControlName="montantCharge"
+          >
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="portionBeehive">Portion Beehive <span class="required">*</span></label>
+          <div class="dropdown-container">
+            <div class="select-box" (click)="toggleDropdown()">
+              <span>{{ situationForm.get('portionBeehive')?.value !== null ? situationForm.get('portionBeehive')?.value + '%' : 'Sélectionnez' }}</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-menu" *ngIf="dropdownOpen">
+              <div 
+                *ngFor="let option of portionBeehiveOptions" 
+                class="dropdown-item"
+                (click)="selectPortionBeehive(option)"
+              >
+                {{ option }}%
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-group">
+          <label>Employés <span class="required">*</span></label>
+          <div class="employees-selector">
+            <div class="select-box" (click)="toggleEDropdown()">
+              <span *ngIf="selectedEmployees.length === 0">Sélectionnez</span>
+              <div class="selected-employees" *ngIf="selectedEmployees.length > 0">
+                <div *ngFor="let emp of selectedEmployees" class="employee-tag">
+                  <span>{{  emp.firstName + ' ' + emp.lastName }} </span>
+                  <button type="button" class="remove-btn" (click)="removeEmployee(emp); $event.stopPropagation()">✕</button>
+                </div>
+              </div>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="employees-dropdown" *ngIf="dropdownEOpen">
+              <div *ngIf="employees.length === 0" class="no-employees-message">
+                Aucun employé trouvé
+              </div>
+              <div *ngFor="let emp of employees" class="employee-item">
+                <div class="employee-checkbox">
+                  <input 
+                    type="checkbox" 
+                    [checked]="isSelected(emp)" 
+                    (click)="$event.stopPropagation(); selectEmployee(emp)"
+                  >
+                  <span>{{  emp.firstName + ' ' + emp.lastName }} </span>
+                </div>
+                <i class="fas fa-check" *ngIf="isSelected(emp)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-submit">Modifier</button>

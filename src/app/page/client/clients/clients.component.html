@@ -1,0 +1,155 @@
+<div class="client-list-container">
+  <div class="title-wrapper">
+    <h1 class="page-title advanced-title">Liste des clients</h1>
+  </div>
+  
+  <!-- Search Bar and Add Button -->
+  <div class="header-section">
+    <div class="search-bar">
+      <span class="search-icon"><i class="fas fa-search"></i></span>
+      <input 
+        type="text" 
+        placeholder="Rechercher..." 
+        [(ngModel)]="searchQuery" 
+        (input)="search()"
+        class="search-input"
+      />
+    </div>
+    <button class="add-client-btn" *ngIf="canPerformActions" (click)="openAddClientModal()">
+      <span class="plus-icon">+</span>Ajouter un client
+    </button>
+  </div>
+  
+  <div class="content">
+    <!-- Success Modals -->
+    <div *ngIf="isSuccess" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le client a été ajouté avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessModified" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le client a été modifié avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessArchive" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le client a été archivé avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="showArchiveConfirmModal" class="modal-overlay confirm-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="confirm-content">
+            <div class="warning-icon">⚠️</div>
+            <p>Êtes-vous sûr de vouloir archiver ce client ?</p>
+            <div class="confirm-actions">
+              <button class="cancel-btn" (click)="cancelArchive()">Annuler</button>
+              <button class="confirm-btn" (click)="confirmArchive()">Confirmer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay form-modal" *ngIf="showModifyClientModal">
+      <app-modify-client
+        [client]="selectedClient"
+        (close)="closeModifyUserModal()"
+        (update)="updateClient()"
+      ></app-modify-client>
+    </div>
+  
+    <!-- Table -->
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Société</th>
+              <th>Siége Social</th>
+              <th>Adresse</th>
+              <th>Directeur d’exploitation</th>
+              <th>Téléphone</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="filteredClients.length > 0">
+              <tr *ngFor="let client of clientsToDisplay">
+                <td>{{ client.nomSociete }}</td>
+                <td>{{ client.siegeSocial }}</td>
+                <td>{{ client.adresse }}</td>
+                <td>{{ getFullName(client) }}</td>
+                <td>{{ client.telephoneDirecteur}}</td>
+                <td  >
+                  <div class="action-buttons">
+                  <button class="edit-btn" (click)="editClient(client.id)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="delete-btn" (click)="openArchiveConfirmModal(client.id)">
+                    <i class="fas fa-archive" ></i>
+                  </button>
+                </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="filteredClients.length === 0">
+              <td colspan="6" class="no-results">Aucun client trouvé</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <div class="pagination" *ngIf="filteredClients.length > 0">
+      <span>Page</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        <
+      </button>
+      <span class="page-number current">{{ currentPage }}</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        >
+      </button>
+    </div>
+  </div>
+  
+  <div class="modal-overlay form-modal" *ngIf="showAddClientModal">
+    <app-add-client
+      (close)="closeAddClientModal()"
+      (clientAdded)="onClientAdded()"
+    ></app-add-client>
+  </div>
+</div>

@@ -1,0 +1,156 @@
+<div class="employe-list-container">
+  <!-- Type Switch Buttons -->
+
+
+  <div class="title-wrapper">
+    <h1 class="page-title advanced-title">Liste des employés </h1>
+  </div>
+
+  <div class="header-section">
+    <div class="search-bar">
+      <span class="search-icon"><i class="fas fa-search"></i></span>
+      <input 
+        type="text" 
+        placeholder="Rechercher..." 
+        [(ngModel)]="searchQuery" 
+        (input)="search()"
+        class="search-input"
+      />
+    </div>
+    <button class="add-employe-btn" *ngIf="canPerformActions" (click)="openAddEmployeModal()">
+      <span class="plus-icon">+</span>Ajouter un employé
+    </button>
+  </div>
+  
+  <div class="content">
+    <!-- Success Modals -->
+    <div *ngIf="isSuccess" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>L'employé a été ajouté avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessModified" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>L'employé a été modifié avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessArchive" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>L'employé a été archivé avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="showArchiveConfirmModal" class="modal-overlay confirm-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="confirm-content">
+            <div class="warning-icon">⚠️</div>
+            <p>Êtes-vous sûr de vouloir archiver cet employé ?</p>
+            <div class="confirm-actions">
+              <button class="cancel-btn" (click)="cancelArchive()">Annuler</button>
+              <button class="confirm-btn" (click)="confirmArchive()">Confirmer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay form-modal" *ngIf="showModifyEmployeModal">
+      <app-modify-employe
+        [employe]="selectedEmploye"
+        [employeType]="employeType"
+        (close)="closeModifyUserModal()"
+        (update)="updateEmploye()"
+      ></app-modify-employe> 
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Nom et prénom</th>
+              <th>Adresse</th>
+              <th>Téléphone</th>
+              <th>RIB</th>
+              
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="filteredEmployes.length > 0">
+              <tr *ngFor="let employe of employesToDisplay">
+                <td>{{ getFullName(employe) }}</td>
+                <td>{{ employe.adresse }}</td>
+                <td>{{ employe.telephone }}</td>
+                <td>{{ employe.rib }}</td>
+                
+                <td class="actions" *ngIf="canPerformActions">
+                  <button class="edit-btn" (click)="editEmploye(employe.id)">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button class="delete-btn" (click)="openArchiveConfirmModal(employe.id)">
+                    <i class="fas fa-archive"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="filteredEmployes.length === 0">
+              <td colspan="6" class="no-results">Aucun employé trouvé</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pagination" *ngIf="filteredEmployes.length > 0">
+      <span>Page</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        <
+      </button>
+      <span class="page-number current">{{ currentPage }}</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        >
+      </button>
+    </div>
+  </div>
+
+  <div class="modal-overlay form-modal" *ngIf="showAddEmployeModal">
+    <app-add-employe 
+      [employeType]="employeType"
+      (close)="closeAddEmployeModal()"
+      (employeAdded)="onEmployeAdded()"
+    ></app-add-employe> 
+  </div>
+</div>

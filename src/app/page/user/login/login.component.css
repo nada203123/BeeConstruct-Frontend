@@ -1,0 +1,207 @@
+/* login.component.css */
+/* login.component.css */
+html, body {
+    overflow: hidden;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    
+    
+    align-items: center;
+    justify-content: center;
+    
+   
+    overflow: hidden;
+
+
+    padding: 0; 
+    margin: 0;
+    
+  background-image: url('../../../../assets/images/login.jpg');
+    background-size: cover;
+    background-position: left center; 
+  }
+  
+
+  
+  .login-content {
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0rem;
+
+   
+    overflow: hidden;
+  }
+  
+  .login-form {
+    
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right:160px;
+  }
+  
+  @media (max-width: 769px) {
+    .login-form {
+      margin: 0 auto;
+      
+    }
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center; /* Centers the text */
+    width: 100%;
+    margin-top: 0px;
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+  }
+  .input-email {
+    width: 93%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  .input-password {
+    width: 88%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #e67e22;
+  }
+  
+  .form-group input.invalid {
+    border-color: #e74c3c;
+  }
+  
+  .form-group input::placeholder {
+    color: #aaa;
+  }
+  
+  .password-field {
+    position: relative;
+  }
+  
+  .password-field input {
+    padding-right: 2.5rem;
+  }
+  
+  .toggle-password {
+    position: absolute;
+    right: 0.15rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .toggle-password svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .toggle-password:hover {
+    color: #333;
+  }
+  
+  .toggle-password:focus {
+    outline: none;
+  }
+  
+  .forgot-password {
+    text-align: right;
+    margin-bottom: 1rem;
+  }
+  
+  .forgot-password a {
+    color: #333;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  
+  .forgot-password a:hover {
+    text-decoration: underline;
+    color: #e67e22;
+  }
+  
+  .login-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .login-button:hover {
+    background-color: #d35400;
+  }
+  
+  .error-message {
+    color: #e74c3c; 
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .error-text {
+    color: #e74c3c; 
+    font-size: 0.9rem;
+    margin-top: 8px;
+    
+    text-align: center;
+   
+  }
+
+ 
+  
+  
+  

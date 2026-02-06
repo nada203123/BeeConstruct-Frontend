@@ -1,0 +1,167 @@
+<div class="chantier-detail-container">
+  <div class="breadcrumb">
+    <span class="breadcrumb-part" (click)="navigateToChantierCards()">Chantiers</span> > 
+    <span class="breadcrumb-part clickable" (click)="navigateToChantierDetails()">{{ chantier.titre }}</span> >
+    <span class="breadcrumb-part">Données d'avancement</span>
+  </div>
+  
+  
+<div class="container">
+  <div class="actions-container">
+    <button class="btn-add" (click)="openAddSituationDialog()">
+      <i class="fas fa-plus"></i> Ajouter une situation
+    </button>
+  </div>
+  
+  <div class="stats-cards">
+    <div class="stat-card">
+      <div class="stat-title">Chiffre d'affaire facturé :</div>
+      <div class="stat-value"> {{chantier.montantGlobalTotal || 0 }} €</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Chiffre d'affaires restant :</div>
+      <div class="stat-value">{{ chantier.montantRestant || 0}} €</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Part Beehive cumulé :</div>
+      <div class="stat-value">{{chantier.cumulPartBeehive}} €</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-title">Total des charges :</div>
+      <div class="stat-value">{{ totalCharges }} €</div>
+    </div>
+  </div>
+  
+  <div class="content-container">
+    <div class="table-section">
+      
+      
+      <div class="table-container">
+        <table class="situations-table">
+          <thead>
+            <tr>
+              <th>Nom situation</th>
+              <th>Date situation</th>
+              <th>Montant global</th>
+              <th>Part Beehive</th>
+              <th></th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+        
+          <tbody *ngIf="situationsData.length > 0; else noSituation">
+            <tr *ngFor="let situation of situationsData">
+              <td> <div class="truncate-text" title="{{ situation.nomSituation }}">
+    {{ situation.nomSituation }}
+  </div></td>
+              <td>{{ situation.dateSituation | date:'dd/MM/yyyy' }}</td>
+              <td>{{ situation.montantGlobal }} €</td>
+              <td>{{ situation.portionBeehiveMontant }} €</td>
+              <td>
+                <button class="btn-info" title="Voir les détails" (click)="openSituationDetails(situation)">
+                  <i class="fas fa-info-circle"></i>
+                </button>
+              </td>
+              <td>
+  <button class="btn-edit" title="Modifier" (click)="openModifySituationDialog(situation)" >
+    <i class="fas fa-edit"></i>
+  </button>
+</td>
+              <td>
+                <button class="btn-delete" title="Supprimer"  (click)="openDeleteConfirmModal(situation.id)" >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      
+    </div>
+    
+    <div class="chart-section">
+      <div class="chart-container">
+        <h3>Répartition du total du marché :</h3>
+        <ngx-charts-pie-chart
+        [view]="[400, 300]"
+        [results]="chartData"
+        [scheme]="colorScheme"
+        [labels]="true"
+        [trimLabels]="false"  
+        [maxLabelLength]="10"
+        [doughnut]="true"
+        [legend]="false"
+         [labelFormatting]="labelFormatting"
+        [tooltipText]="tooltipFormatting">
+      </ngx-charts-pie-chart>
+        
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showDeleteConfirmModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="confirm-content">
+          <div class="warning-icon">⚠️</div>
+          <p >Êtes-vous sûr de vouloir supprimer cette situation ?</p>
+       
+          <div class="confirm-actions">
+            <button class="cancel-btn" (click)="cancelDelete()">Annuler</button>
+            <button class="confirm-btn" (click)="confirmDelete()">Confirmer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div *ngIf="isSuccessDelete" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p >La situation a été supprimée avec succès.</p>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isSuccess" class="modal-overlay success-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p>La situation a été ajoutée avec succès.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <div *ngIf=" isSuccessModified" class="modal-overlay success-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p>La situation a été modifiée avec succès.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #noSituation>
+    <div class="no-situation-message">
+      Aucune situation trouvée.
+    </div>
+  </ng-template>
+  </div>
+</div>

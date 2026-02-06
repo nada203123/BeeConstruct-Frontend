@@ -1,0 +1,146 @@
+<div class="chantier-detail-container">
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <span class="breadcrumb-part" [routerLink]="['/accueil/chantiers']"
+      >Chantiers</span
+    >
+    <span
+      class="breadcrumb-part clickable"
+      [routerLink]="['/accueil/chantiers', situationId]"
+      >{{ chantierTitre }}</span
+    >
+
+    <span class="breadcrumb-part">Salaires</span>
+  </div>
+  <div class="content">
+    <div  class="summary-container">
+    <!-- Situation Filter -->
+   
+    <!-- Summary Stats -->
+    <div *ngIf="selectedSituationId" class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-title">Montant salaire</div>
+        <div class="stat-value">
+          <strong>{{ montantSalaire | currency : "EUR" }}</strong>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Nombre jours homme</div>
+        <div class="stat-value">
+          <strong>{{ nombreJoursHomme }}</strong>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Salaire par jour</div>
+        <div class="stat-value">
+          <strong>{{ salaireParJour | currency : "EUR" }}</strong>
+        </div>
+      </div>
+    </div>
+     <div class="filter-container">
+      <div class="dropdown-wrapper">
+        <select
+          [(ngModel)]="selectedSituationId"
+          (ngModelChange)="onSituationChange()"
+          class="dropdown-select"
+        >
+          <option *ngFor="let situation of situations" [value]="situation.id">
+            {{ situation.nomSituation }}
+          </option>
+        </select>
+        <span class="dropdown-placeholder" *ngIf="!selectedSituationId"
+          >Sélectionner une situation</span
+        >
+        <i class="fas fa-chevron-down dropdown-arrow"></i>
+      </div>
+    </div>
+    </div>
+    <!-- Salary Table -->
+    <div *ngIf="selectedSituationId" class="table-container">
+      <table class="salary-table">
+        <thead>
+          <tr>
+            <th>Employé</th>
+            <th>Salaire</th>
+            <th>Avance</th>
+            <th>Loyer</th>
+            <th>Cotisation</th>
+            <th>Salaire Net</th>
+            <th>Retenue</th>
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let salary of this.salaries">
+            <td>{{ salary.employeeName }}</td>
+            <td>{{ salary.montantSalaire }}</td>
+
+            <td>{{ salary.avance || "-" }}</td>
+            <td>{{ salary.loyer || "-" }}</td>
+            <td>{{ salary.cotisation || "-" }}</td>
+            <td>{{ salary.salaireNet }}</td>
+            <td class="action-cell">
+              <button class="download-btn" (click)="openAddRetenueModal(salary.employeeId)" aria-label="Ajouter une retenue">
+                <i class="fas fa-plus"></i>
+              </button>
+            
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+        <div class="pagination" *ngIf="selectedSituationId && totalPages > 0">
+      <span>Page</span>
+      <button class="page-arrow" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)"><</button>
+      <span class="page-number current">{{ currentPage }}</span>
+      <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">></button>
+    </div> 
+
+   
+
+    <div *ngIf="showSuccessModal" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <svg class="checkmark" viewBox="0 0 52 52">
+                <path class="checkmark-path" d="M14 27l7 7 16-16" />
+              </svg>
+            </div>
+            <p>{{ successMessage }}</p>
+          </div>
+        </div>
+      </div>
+    </div> 
+
+    <div *ngIf="showAddRetenueModal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2>Ajouter une retenue</h2>
+          <button class="close-btn" (click)="closeAddRetenueModal()" aria-label="Fermer le modal de retenue">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="type">Type</label>
+            <div class="radio-group">
+          <label><input type="radio" name="retenueType" [(ngModel)]="retenueType" value="avance" /> Avance</label>
+          <label><input type="radio" name="retenueType" [(ngModel)]="retenueType" value="loyer" /> Loyer</label>
+          <label><input type="radio" name="retenueType" [(ngModel)]="retenueType" value="cotisation" /> Cotisation</label>
+            </div>
+          </div>
+          <div class="form-group">
+        <label for="montant">Montant de la retenue</label>
+        <input id="montant" type="number" [(ngModel)]="retenueAmount" placeholder="Montant de la retenue" class="np" inputmode="decimal" />
+      </div>
+          <div class="form-actions">
+        <button class="submit-btn" (click)="saveRetenue()" aria-label="Enregistrer la retenue">Enregistrer</button>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+</div>

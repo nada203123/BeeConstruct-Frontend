@@ -1,0 +1,32 @@
+<div class="sidebar">
+  <div class="logo-container">
+    <div class="logo">
+      
+          <img src="assets/images/building.svg" alt="Logo" class="logo-img"/>
+      <span class="logo-text">
+      <span class="bee">BEE</span><span class="construct">Construct</span>
+    </span>
+    </div>
+    
+  </div>
+
+  <nav class="menu">
+    <ul>
+      <li *ngFor="let item of menuItems" 
+          [class.active]="item.active"
+          (click)="navigateTo(item)">
+        <a [routerLink]="item.route">
+          <i class="icon" [class]="'fa fa-' + item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="logout">
+    <a (click)="logout()">
+      <i class="fa fa-sign-out-alt"></i>
+      <span>Déconnexion</span>
+    </a>
+  </div>
+</div>

@@ -1,0 +1,301 @@
+<div class="devis-list-container">
+  <div class="tab-switch-container">
+    <div class="tab-switch">
+      <!-- Updated: Use 'chantiers' and label "Chantiers en prospection" -->
+      <a class="tab-button active" [ngClass]="{'active': activeTab === 'chantiers'}" (click)="setActiveTab('chantiers')" routerLink="/accueil/offre">Chantiers en prospection</a>
+      <a class="tab-button" [ngClass]="{'active': activeTab === 'devis'}" (click)="setActiveTab('devis')" routerLink="/accueil/devis">Devis</a>
+    </div>
+  </div>
+
+  <div class="header-line">
+    <h1 class="page-title advanced-title">Liste des devis</h1>
+    <div class="header-controls">
+      <button class="add-devis-btn" *ngIf="canPerformActions" (click)="openAddOffreModal()">
+        <span class="plus-icon">+</span>Ajouter un devis
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-tabs">
+      <button 
+        class="filter-tab" 
+        *ngFor="let statusOption of statusOptions"
+        [ngClass]="{'active': selectedStatut === statusOption.value}"
+        (click)="filterByStatut(statusOption.value)"
+      >
+        {{ statusOption.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Success Popup for Archiving -->
+  <div *ngIf="showSuccessPopup" class="modal-overlay success-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p>{{ successMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isSuccess" class="modal-overlay success-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p>Le devis a été ajouté avec succès.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isSuccessModified" class="modal-overlay success-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p>Le devis a été modifié avec succès.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isSuccessArchive" class="modal-overlay success-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="success-content">
+          <div class="check-circle">
+            <span class="check-icon">✔</span>
+          </div>
+          <p>Le devis a été archivé avec succès.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showArchiveConfirmModal" class="modal-overlay confirm-modal">
+    <div class="modal-container">
+      <div class="modal-body">
+        <div class="confirm-content">
+          <div class="warning-icon">⚠️</div>
+          <p>Êtes-vous sûr de vouloir archiver ce devis ?</p>
+          <div class="confirm-actions">
+            <button class="cancel-btn" (click)="cancelArchive()">Annuler</button>
+            <button class="confirm-btn" (click)="confirmArchive()">Confirmer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showAdjustmentModal" class="modal-overlayA adjustment-modal">
+    <div class="modal-containerA">
+      <div class="modal-headerA">
+        <h2>Ajustement du devis</h2>
+        <button class="close-btnA" (click)="closeAdjustmentModal()">×</button>
+      </div>
+
+      <div class="modal-bodyA">
+        <form (ngSubmit)="submitAdjustment()" enctype="multipart/form-data"> 
+          <div class="form-groupA">
+            <label for="file">Devis</label>
+            <div class="custom-file-upload">
+              <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" required>
+              <span class="upload-label">
+                <i class="fas fa-upload upload-icon"></i>
+                {{ selectedFileName }}
+              </span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="comment">Commentaire</label>
+            <textarea id="comment" [(ngModel)]="adjustmentComment" name="comment" rows="4" required></textarea>
+          </div>
+          <div *ngIf="errorMessage" class="error-messageA">{{ errorMessage }}</div>
+          <div class="form-actionsA">
+            <button type="submit" class="submit-btnA">Confirmer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div *ngIf="showCommentModal" class="modal-overlayA adjustment-modal">
+    <div class="modal-containerA">
+      <div class="modal-headerA">
+        <h2>Ajustement du devis</h2>
+        <button class="close-btnA" (click)="closeAdjustmentModal()">×</button>
+      </div>
+
+      <div class="modal-bodyA">
+        <form (ngSubmit)="submitComment()" enctype="multipart/form-data"> 
+          <div class="form-group">
+            <label for="comment">Commentaire</label>
+            <textarea id="comment" [(ngModel)]="adjustmentComment" name="comment" rows="4" required></textarea>
+          </div>
+          <div *ngIf="errorMessage" class="error-messageA">{{ errorMessage }}</div>
+          <div class="form-actionsA">
+            <button type="submit" class="submit-btnA">Confirmer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay form-modal" *ngIf="showModifyDevisModal">
+    <app-modify-devis
+      [devis]="selectedDevis"
+      (close)="closeModifyDevisModal()"
+      (devisUpdated)="onDevisUpdated()"
+    ></app-modify-devis>
+  </div>
+
+  <div class="devis-table-container">
+    <table class="devis-table" *ngIf="devisToDisplay.length > 0">
+      <thead>
+        <tr>
+          <th class="devisC">Devis</th>
+          <th>Chantier en prospection</th>
+          <th>Client</th>
+          <th>Statut</th>
+          <th>Historique</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of devisToDisplay">
+          <td class="devis-file">
+            <div class="file-content">
+              <div class="file-info">
+                <div class="file-icon">
+                  <div class="file-icon">
+                    <i [class]="getFileIconClass(d.fileName)"></i>
+                  </div>
+                </div>
+                <span class="file-name">{{ d.fileName }}</span>
+              </div>
+              <a href="javascript:void(0)" (click)="downloadFile(d.id, d.fileName)" class="download-link">
+                <i class="download-icon">↓</i>
+              </a>
+            </div>
+          </td>
+          <td>{{ d.offer }}</td>
+          <td>{{ d.clientNomSociete}} </td>
+          <td>
+            <div class="status-container">
+              <div class="status-badge" 
+                   [ngClass]="d.statut.toLowerCase().replace(' ', '-')"
+                   (click)="toggleDropdown(d)" >
+                   {{ getStatusLabel(d.statut) }}
+                <i class="dropdown-icon" *ngIf="canPerformActions">▼</i>
+              </div>
+              <div class="status-dropdown" *ngIf="d.showDropdown && canPerformActions">
+                <div class="dropdown-item" 
+                     *ngFor="let statut of statutOptions" 
+                     (click)="updateDevisStatus(d, statut.value)"
+                >
+                  {{ statut.label }}
+                </div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <button class="historique-btn" (click)="toggleHistorique(d.id)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </td>
+          <td class="actions" *ngIf="canPerformActions">
+            <div class="action-buttons">
+            <button class="edit-btn" (click)="editDevis(d)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn" (click)="openArchiveConfirmModal(d)">
+              <i class="fas fa-archive"></i>
+            </button>
+          </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="devisToDisplay.length === 0" class="empty-devis-message">
+      Aucun devis trouvé.
+    </div>
+  </div>
+
+  <div class="pagination" *ngIf="filteredDevis.length > 0">
+    <span class="pagination-label">Page</span>
+    <button
+      class="pagination-arrow"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      <
+    </button>
+    <span class="pagination-number">{{ currentPage }}</span>
+    <button
+      class="pagination-arrow"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      >
+    </button>
+  </div>
+
+  <div *ngIf="showHistoryModal" class="modal-overlayH history-modal">
+    <div class="modal-containerH">
+      <div class="modal-headerH">
+        <h2>Historique des modifications</h2>
+        <button class="close-btnH" (click)="closeHistoryModal()">×</button>
+      </div>
+      <div class="modal-bodyH">
+        <div *ngIf="selectedDevisHistory.length === 0" class="empty-historyH">
+          Aucun historique disponible pour ce devis.
+        </div>
+        <table *ngIf="selectedDevisHistory.length > 0" class="history-tableH">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Statut</th>
+              <th>Commentaire</th>
+              <th>Document</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of selectedDevisHistory" class="history-rowH">
+              <td class="history-date">{{item.createdAt | date:'MMM d, y'}}</td>
+              <td class="history-status">
+                <span [ngClass]="'status-badge ' + item.status.toLowerCase()">
+                  {{item.status}}
+                </span>
+              </td>
+              <td class="history-comment">{{item.comment || '-'}}</td>
+              <td class="history-file">
+                <a *ngIf="item.filePath  && item.status === 'AJUSTE_APRES_RECLAMATION'" [href]="item.filePath" target="_blank" class="file-link">
+                  <i class="fas fa-file-alt"></i> {{item.originalFileName || 'Document'}}
+                </a>
+                <span *ngIf="!item.filePath">-</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay form-modal" *ngIf="showAddDevisModal">
+    <app-add-devis
+      (close)="closeAddDevisModal()"
+      (devisAdded)="onDevisAdded()"
+    ></app-add-devis>
+  </div>
+</div>

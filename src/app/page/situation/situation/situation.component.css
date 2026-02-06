@@ -1,0 +1,470 @@
+.chantier-detail-container {
+  padding: 20px;
+  width: 96%;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.breadcrumb-part {
+  cursor: pointer;
+}
+
+.breadcrumb-part:hover {
+  color: #F27A3F;
+}
+
+.dashboard-title {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 25px;
+  font-weight: 600;
+}
+
+/* Stats cards */
+.stats-cards {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.stat-card {
+  flex: 1;
+  background-color: #fbfbfb;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+}
+
+.stat-title {
+  color: #F27A3F;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Content container */
+.content-container {
+  display: flex;
+  gap: 20px;
+}
+
+.table-section {
+  flex: 3;
+}
+
+.chart-section {
+  flex: 2;
+}
+
+/* Add situation button */
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+  margin-top: -30px;
+}
+
+.btn-add {
+  background-color: #F27A3F;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.btn-add:hover {
+  background-color: #e55a00;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-add:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-add i {
+  margin-right: 5px;
+}
+
+/* Table styling */
+.table-container {
+  width: 100%;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.situations-table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  max-height: 400px; /* Adjust based on your row height */
+  overflow-y: auto;
+}
+
+.situations-table th,
+.situations-table td {
+  padding: 15px 10px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.situations-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  width: 105px;
+}
+
+.situations-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.situations-table thead,
+.situations-table tbody {
+  display: block;
+  width: 100%;
+}
+
+.situations-table thead {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 10;
+}
+
+
+
+.situations-table tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  transition: background-color 0.3s ease;
+}
+
+.btn-info, .btn-delete, .btn-edit {
+  padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-edit {
+  color: #666;
+}
+
+.btn-edit:hover {
+  color: #D32F2F;
+  transform: scale(1.2);
+}
+
+.btn-info {
+  color: #666;
+}
+
+.btn-info:hover {
+  color: #D32F2F;
+  transform: scale(1.2);
+}
+
+.btn-delete {
+  color: #666;
+}
+
+.btn-delete:hover {
+  color: #D32F2F;
+  transform: scale(1.2);
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination span {
+  margin: 0 10px;
+  color: #666;
+}
+
+.page-btn {
+  background: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 5px;
+  color: #666;
+}
+
+.page-btn.active {
+  background-color: #F27A3F;
+  color: white;
+  border-radius: 50%;
+}
+
+.no-situation-message {
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+  font-style: italic;
+  margin-top: 20px;
+  padding: 20px;
+}
+
+/* Chart container */
+.chart-container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-container h3 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 500;
+  align-self: flex-start;
+}
+
+.donut-chart {
+  width: 200px;
+  height: 200px;
+  margin: 0 auto 20px;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  background: conic-gradient(
+    #E64A19 0% 32%, 
+    #FF5722 32% 56%, 
+    #FF8A65 56% 74%,
+    #EEEEEE 74% 100%
+  );
+}
+
+.donut-chart::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.chart-legend {
+  margin-top: 20px;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+.legend-item:hover {
+  background-color: #f5f5f5;
+}
+
+.legend-color {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
+  margin-right: 10px;
+}
+ngx-charts-pie-chart {
+  display: block;
+  width: 100%;
+  height: 300px;
+  margin-left: 60px;
+}
+
+.situations-table td:first-child {
+
+  padding: 5px; /* Reduce padding for these cells */
+  width: 140px; /* Set a fixed width for these cells */
+}
+
+.situations-table th:first-child {
+
+  padding: 5px; /* Reduce padding for these cells */
+  width: 140px; /* Set a fixed width for these cells */
+}
+
+.situations-table td:nth-last-child(2),
+.situations-table td:nth-last-child(3),
+.situations-table td:last-child {
+  padding: 5px; /* Reduce padding for these cells */
+  width: 30px; /* Set a fixed width for these cells */
+}
+
+.situations-table th:nth-last-child(2),
+.situations-table th:nth-last-child(3),
+.situations-table th:last-child {
+  padding: 5px; /* Reduce padding for these cells */
+  width: 30px; /* Set a fixed width for these cells */
+}
+
+.situations-table .btn-info,
+.situations-table .btn-delete {
+  margin: 0; /* Remove any margins */
+  padding: 5px; /* Adjust padding as needed */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 500px;
+  max-width: 90%;
+  padding: 20px 25px;
+  border: 1px solid #e0e0e0;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(90vh - 60px);
+  background-color: #fff;
+  
+}
+
+.confirm-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.confirm-content p {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.confirm-btn,
+.cancel-btn {
+  background-color: #F27A3F;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.confirm-btn:hover,
+.cancel-btn:hover {
+  background-color: #e06a2f;
+  transform: translateY(-1px);
+}
+
+.check-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  background-color: #28a745;
+  border-radius: 50%;
+}
+
+.check-icon {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.success-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.warning-icon {
+  font-size: 30px;
+  color: #F27A3F;
+  margin-bottom: 10px;
+}
+
+
+.container {
+  margin-top: 75px;
+}
+
+.truncate-text {
+  width: 100%;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}

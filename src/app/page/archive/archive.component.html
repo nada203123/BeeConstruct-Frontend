@@ -1,0 +1,534 @@
+<div class="archive-container">
+  <div class="title-wrapper">
+    <h1 class="page-title advanced-title">Archive</h1>
+  </div>
+
+  <div class="header-section">
+    <div class="search-bar">
+      <span class="search-icon"><i class="fas fa-search"></i></span>
+      <input
+        type="text"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchQuery"
+        (input)="search()"
+        class="search-input"
+      />
+    </div>
+
+    <div class="dropdown-container advanced-dropdown">
+      <button class="dropdown-toggle" (click)="toggleDropdown()">
+        {{ selectedOption || "Clients" }}
+        <span
+          class="dropdown-arrow"
+          [class.open]="isDropdownOpen"
+          *ngIf="role === 'Administrateur' || role === 'Chargé commercial'"
+          >▾</span
+        >
+      </button>
+      <div
+        class="dropdown-menu"
+        *ngIf="
+          isDropdownOpen &&
+          (role === 'Administrateur' || role === 'Chargé commercial')
+        "
+      >
+        <div
+          class="dropdown-item"
+          *ngIf="role === 'Administrateur'"
+          (click)="selectOption('Utilisateurs')"
+        >
+          Utilisateurs
+        </div>
+        <div
+          class="dropdown-item"
+          *ngIf="role === 'Administrateur' || role === 'Chargé commercial'"
+          (click)="selectOption('Clients')"
+        >
+          Clients
+        </div>
+        <div
+          class="dropdown-item"
+          *ngIf="role === 'Administrateur' || role === 'Chargé commercial'"
+          (click)="selectOption('Employés')"
+        >
+          Employés
+        </div>
+        <div
+          class="dropdown-item"
+          *ngIf="
+            role === 'Administrateur' ||
+            role === 'Chargé commercial' ||
+            role === 'Chargé de production'
+          "
+          (click)="selectOption('Chantier en prospection')"
+        >
+          Chantier en prospection
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div *ngIf="isSuccessRestore" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p *ngIf="selectedOption === 'Clients'">
+              Le client a été restauré avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Employés'">
+              L'employé a été restauré avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Équipements'">
+              L'équipement a été restauré avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Utilisateurs'">
+              L'utilisateur a été restauré avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Chantier en prospection'">
+              Le chantier en prospection a été restauré avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Devis'">
+              Le devis a été restauré avec succès.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessDelete" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p *ngIf="selectedOption === 'Clients'">
+              Le client a été supprimé avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Employés'">
+              L'employé a été supprimé avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Équipements'">
+              L'équipement a été supprimé avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Utilisateurs'">
+              L'utilisateur a été supprimé avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Chantier en prospection'">
+              Le chantier en prospection a été supprimé avec succès.
+            </p>
+            <p *ngIf="selectedOption === 'Devis'">
+              Le devis a été supprimé avec succès.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr *ngIf="selectedOption === 'Clients'">
+              <th>Client</th>
+              <th>Siége Social</th>
+              <th>Adresse</th>
+              <th>Directeur d’exploitation</th>
+              <th>Téléphone</th>
+              <th></th>
+            </tr>
+            <tr *ngIf="selectedOption === 'Employés'">
+              <th>Nom et Prénom</th>
+              <th>Téléphone</th>
+              <th>Adresse</th>
+              <th>RIB</th>
+
+              <th></th>
+            </tr>
+            <tr *ngIf="selectedOption === 'Équipements'">
+              <th>Équipement</th>
+              <th>Quantité</th>
+              <th></th>
+            </tr>
+            <tr *ngIf="selectedOption === 'Utilisateurs'">
+              <th>Utilisateur</th>
+              <th>Role</th>
+              <th>Email</th>
+              <th>Téléphone</th>
+              <th></th>
+            </tr>
+            <tr *ngIf="selectedOption === 'Chantier en prospection'">
+              <th>Chantier en prospection</th>
+              <th>Client</th>
+              <th>Localisation</th>
+              <th>Statut</th>
+              <th>Date de demande</th>
+              <th>Type</th>
+              <th></th>
+            </tr>
+            <tr *ngIf="selectedOption === 'Devis'">
+              <th>Devis</th>
+              <th>Chantier en prospection</th>
+              <th>Client</th>
+              <th>Statut</th>
+              <th>Historique</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="filteredItems.length > 0">
+              <tr *ngFor="let item of itemsToDisplay">
+                <ng-container *ngIf="selectedOption === 'Clients'">
+                  <td>{{ item.nomSociete }}</td>
+                  <td>{{ item.siegeSocial }}</td>
+                  <td>{{ item.adresse }}</td>
+                  <td>{{ getFullName(item) }}</td>
+                  <td>{{ item.telephoneDirecteur }}</td>
+                  <td class="actions" *ngIf="canPerformActions">
+                    <div class="action-buttons">
+                      <button
+                        class="edit-btn"
+                        (click)="openRestoreConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-undo"></i>
+                      </button>
+                      <button
+                        class="delete-btn"
+                        (click)="openDeleteConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container *ngIf="selectedOption === 'Employés'">
+                  <td>{{ getFullName(item) }}</td>
+
+                  <td>{{ item.telephone }}</td>
+                  <td>{{ item.adresse }}</td>
+                  <td>{{ item.rib }}</td>
+                  <td class="actions" *ngIf="canPerformActions">
+                    <div class="action-buttons">
+                      <button
+                        class="edit-btn"
+                        (click)="openRestoreConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-undo"></i>
+                      </button>
+                      <button
+                        class="delete-btn"
+                        (click)="openDeleteConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container *ngIf="selectedOption === 'Équipements'">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td class="actions" *ngIf="canPerformActions">
+                    <button
+                      class="edit-btn"
+                      (click)="openRestoreConfirmModal(item.id)"
+                    >
+                      <i class="fas fa-undo"></i>
+                    </button>
+                    <button
+                      class="delete-btn"
+                      (click)="openDeleteConfirmModal(item.id)"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </ng-container>
+
+                <ng-container *ngIf="selectedOption === 'Utilisateurs'">
+                  <td>{{ item.firstName }} {{ item.lastName }}</td>
+                  <td>{{ item.role }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.phoneNumber }}</td>
+                  <td class="actions" *ngIf="canPerformActions">
+                    <div class="action-buttons">
+                      <button
+                        class="edit-btn"
+                        (click)="openRestoreConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-undo"></i>
+                      </button>
+                      <button
+                        class="delete-btn"
+                        (click)="openDeleteConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container
+                  *ngIf="selectedOption === 'Chantier en prospection'"
+                >
+                  <td>{{ item.titre }}</td>
+                  <td>{{ getClientName(item.id) }}</td>
+                  <td>{{ item.localisation }}</td>
+                  <td>{{ formatStatus(item.statutOffre) }}</td>
+                  <td>{{ item.dateDemande }}</td>
+                  <td>{{ formatType(item.type) }}</td>
+                  <td class="actions" *ngIf="canPerformActions">
+                    <div class="action-buttons">
+                      <button
+                        class="edit-btn"
+                        (click)="openRestoreConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-undo"></i>
+                      </button>
+                      <button
+                        class="delete-btn"
+                        (click)="openDeleteConfirmModal(item.id)"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </ng-container>
+
+                <ng-container *ngIf="selectedOption === 'Devis'">
+                  <td class="devis-file">
+                    <div class="file-icon">
+                      <img src="assets/images/pdf.png" alt="PDF" />
+                    </div>
+                    <span>{{ item.fileName }}</span>
+                    <a
+                      [href]="item.filePath"
+                      class="download-link"
+                      target="_blank"
+                    >
+                      <i class="download-icon">↓</i>
+                    </a>
+                  </td>
+                  <td>{{ item.offer }}</td>
+                  <td>{{ item.clientNomSociete }}</td>
+                  <td>{{ formatStatus(item.status) }}</td>
+                  <td>
+                    <button
+                      class="historique-btn"
+                      (click)="toggleHistorique(item)"
+                    >
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </td>
+                  <td class="actions" *ngIf="canPerformActions">
+                    <button
+                      class="edit-btn"
+                      (click)="openRestoreConfirmModal(item.id)"
+                    >
+                      <i class="fas fa-undo"></i>
+                    </button>
+                    <button
+                      class="delete-btn"
+                      (click)="openDeleteConfirmModal(item.id)"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </ng-container>
+              </tr>
+            </ng-container>
+            <tr *ngIf="filteredItems.length === 0">
+              <td
+                [attr.colspan]="
+                  selectedOption === 'Clients'
+                    ? 6
+                    : selectedOption === 'Employés'
+                    ? 9
+                    : selectedOption === 'Utilisateurs'
+                    ? 5
+                    : selectedOption === 'Devis'
+                    ? 6
+                    : selectedOption === 'Offres'
+                    ? 5
+                    : 3
+                "
+                class="no-results"
+              >
+                <span *ngIf="selectedOption === 'Clients'"
+                  >Aucun client trouvé</span
+                >
+                <span *ngIf="selectedOption === 'Employés'"
+                  >Aucun employé trouvé</span
+                >
+                <span *ngIf="selectedOption === 'Équipements'"
+                  >Aucun équipement trouvé</span
+                >
+                <span *ngIf="selectedOption === 'Utilisateurs'"
+                  >Aucun utilisateur trouvé</span
+                >
+                <span *ngIf="selectedOption === 'Chantier en prospection'"
+                  >Aucun chantier en prospection trouvée</span
+                >
+                <span *ngIf="selectedOption === 'Devis'"
+                  >Aucun devis trouvé</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <span>Page</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        <
+      </button>
+      <span class="page-number current">{{ currentPage }}</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        >
+      </button>
+    </div>
+
+    <div *ngIf="showRestoreConfirmModal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="confirm-content">
+            <div class="warning-icon">⚠️</div>
+            <p *ngIf="selectedOption === 'Clients'">
+              Êtes-vous sûr de vouloir restaurer ce client ?
+            </p>
+            <p *ngIf="selectedOption === 'Employés'">
+              Êtes-vous sûr de vouloir restaurer cet employé ?
+            </p>
+            <p *ngIf="selectedOption === 'Équipements'">
+              Êtes-vous sûr de vouloir restaurer cet équipement ?
+            </p>
+            <p *ngIf="selectedOption === 'Utilisateurs'">
+              Êtes-vous sûr de vouloir restaurer cet utilisateur ?
+            </p>
+            <p *ngIf="selectedOption === 'Chantier en prospection'">
+              Êtes-vous sûr de vouloir restaurer ce chantier en prospection ?
+            </p>
+            <p *ngIf="selectedOption === 'Devis'">
+              Êtes-vous sûr de vouloir restaurer ce cevis ?
+            </p>
+            <div class="confirm-actions">
+              <button class="cancel-btn" (click)="cancelRestore()">
+                Annuler
+              </button>
+              <button class="confirm-btn" (click)="confirmRestore()">
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showDeleteConfirmModal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="confirm-content">
+            <div class="warning-icon">⚠️</div>
+            <p *ngIf="selectedOption === 'Clients'">
+              Êtes-vous sûr de vouloir supprimer ce client ?
+            </p>
+            <p *ngIf="selectedOption === 'Employés'">
+              Êtes-vous sûr de vouloir supprimer cet employé ?
+            </p>
+            <p *ngIf="selectedOption === 'Équipements'">
+              Êtes-vous sûr de vouloir supprimer cet équipement ?
+            </p>
+            <p *ngIf="selectedOption === 'Utilisateurs'">
+              Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+            </p>
+            <p *ngIf="selectedOption === 'Chantier en prospection'">
+              Êtes-vous sûr de vouloir supprimer ce chantier en prospection ?
+            </p>
+            <p *ngIf="selectedOption === 'Devis'">
+              Êtes-vous sûr de vouloir supprimer ce devis ?
+            </p>
+            <div class="confirm-actions">
+              <button class="cancel-btn" (click)="cancelDelete()">
+                Annuler
+              </button>
+              <button class="confirm-btn" (click)="confirmDelete()">
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Modal -->
+    <div *ngIf="showHistoryModal" class="modal-overlay history-modal">
+      <div class="modal-container history-modal">
+        <div class="modal-header">
+          <h2>Historique des modifications</h2>
+          <button class="close-btn" (click)="closeHistoryModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="selectedDevisHistory.length === 0" class="empty-history">
+            Aucun historique disponible pour ce devis.
+          </div>
+          <table *ngIf="selectedDevisHistory.length > 0" class="history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>Commentaire</th>
+                <th>Document</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedDevisHistory" class="history-row">
+                <td class="history-date">
+                  {{ item.createdAt | date : "MMM d, y" }}
+                </td>
+                <td class="history-status">
+                  <span [ngClass]="'status-badge ' + item.statut.toLowerCase()">
+                    {{ formatStatus(item.statut) }}
+                  </span>
+                </td>
+                <td class="history-comment">{{ item.comment || "-" }}</td>
+                <td class="history-file">
+                  <a
+                    *ngIf="
+                      item.filePath &&
+                      item.statut === 'AJUSTE_APRES_RECLAMATION'
+                    "
+                    [href]="item.filePath"
+                    target="_blank"
+                    class="file-link"
+                  >
+                    <i class="fas fa-file-alt"></i>
+                    {{ item.originalFileName || "Document" }}
+                  </a>
+                  <span *ngIf="!item.filePath">-</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

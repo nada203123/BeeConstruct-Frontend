@@ -1,0 +1,160 @@
+.situation-details-container {
+  padding: 0;
+  width: 600px;
+  max-width: 95vw;
+  background: #fff;
+ 
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  background-color:   #fbfbfb;
+  color: #F27A3F;
+}
+
+.details-header h2 {
+  margin-left: 195px;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 20px;
+
+
+}
+
+.detail-card.highlight {
+  background: #f8f8f8;
+  border-left-color: #F27A3F;
+}
+
+.close-btn {
+  border: none;
+  outline: none;
+  background: transparent;
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+  transform: scale(1);
+  background: transparent;
+}
+
+.details-content {
+  padding: 25px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.detail-card {
+  background: #fbfbfb;
+  border-radius: 8px;
+  padding: 15px;
+  border-left: 4px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+
+.detail-card:hover {
+  background: #f5f5f5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.detail-label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.employees-section {
+  margin-top: 15px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.employees-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+
+.employee-item, .no-employees {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.employee-item:hover {
+  background: #f0f0f0;
+}
+
+
+.employee-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  color: #F27A3F;
+}
+
+.no-employees {
+  color: #888;
+  font-style: italic;
+}
+
+.no-employees mat-icon {
+  margin-right: 10px;
+  color: #888;
+}
+
+/* Scrollbar styling */
+.employees-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.employees-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.employees-list::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 3px;
+}
+
+.employees-list::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+

@@ -1,0 +1,63 @@
+
+<div class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2>Ajouter un devis</h2>
+        <button class="close-btn" (click)="onClose()">×</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="devisForm" (ngSubmit)="onSubmit()">
+          <div class="form-grid">
+            <div class="form-group">
+                <label for="offreId">Offre <span class="required">*</span></label>
+              
+                <select
+                class="np"
+                id="offreId"
+                formControlName="offreId"
+                [ngClass]="{'invalid': devisForm.get('offreId')?.invalid && devisForm.get('offreId')?.touched}"
+                (focus)="clearErrorMessage()" (change)="onOfferSelected($event)"
+              >
+                <option value="" disabled>Sélectionner une offre</option>
+                <option *ngFor="let offre of offres" [value]="offre.id">
+                  {{ offre.titre }} 
+                </option>
+              </select>
+            
+            </div>
+
+            <div class="form-group">
+              <label>Client</label>
+              <input class="np" formControlName="clientId" [ngClass]="{'invalid': devisForm.get('clientId')?.invalid && devisForm.get('clientId')?.touched}" readonly>
+            </div>
+
+             <div class="form-group">
+            <label for="file">Fichier du devis <span class="required">*</span></label>
+            <input     class="np"
+              type="file" 
+              id="file" 
+              (change)="onFileSelected($event)" 
+              accept=".pdf,.doc,.docx"
+              required
+            >
+            
+          </div>
+           
+          
+  
+           
+          </div>
+  
+          <div class="error-message" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
+  
+          <div class="form-actions">
+            <button type="submit" class="submit-btn" >
+              Ajouter
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

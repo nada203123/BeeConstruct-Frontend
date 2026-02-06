@@ -1,0 +1,107 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Ajouter un client</h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="societe">Société <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="societe"
+              formControlName="nomSociete"
+              [ngClass]="{'invalid': clientForm.get('nomSociete')?.invalid && clientForm.get('nomSociete')?.touched}" 
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="siegeSocial">Siège social <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="siegeSocial"
+              formControlName="siegeSocial"
+              [ngClass]="{'invalid': clientForm.get('siegeSocial')?.invalid && clientForm.get('siegeSocial')?.touched}" 
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <input
+              class="np"
+              type="text"
+              id="adresse"
+              formControlName="adresse"
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="directeurExploitation">Directeur d'exploitation <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="directeurExploitation"
+              formControlName="directeurComplet"
+              [ngClass]="{'invalid': clientForm.get('directeurComplet')?.invalid && clientForm.get('directeurComplet')?.touched}" 
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+        </div>
+        
+        <div class="form-group telephone-container">
+          <label for="telephone">Téléphone</label>
+          <div class="phone-input-wrapper">
+            <div class="country-code-select">
+              <button
+                type="button"
+                class="country-code-button"
+                (click)="toggleCountryCodeDropdown()"
+              >
+                <img [src]="selectedCountryCode.flag" class="flag-icon">
+                {{ selectedCountryCode.code }}
+              </button>
+              
+              <div 
+                class="country-code-dropdown" 
+                *ngIf="isCountryCodeDropdownOpen"
+              >
+                <div 
+                  *ngFor="let country of countryCodes" 
+                  class="country-code-item"
+                  (click)="selectCountryCode(country)"
+                >
+                  <img [src]="country.flag" class="flag-icon">
+                  {{ country.code }} 
+                </div>
+              </div>
+            </div>
+            <input
+              type="tel"
+              id="telephone"
+              class="inputPhone"
+              formControlName="telephoneDirecteur"
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            Ajouter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

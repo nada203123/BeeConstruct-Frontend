@@ -1,0 +1,101 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Modifier une commande</h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="commandeForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nomFournisseur">Nom du Fournisseur <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="nomFournisseur"
+              formControlName="nomFournisseur"
+              [ngClass]="{'invalid': commandeForm.get('nomFournisseur')?.invalid && commandeForm.get('nomFournisseur')?.touched}"
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="prixHT">Prix HT (€) <span class="required">*</span></label>
+            <input
+              class="np"
+              type="number"
+              id="prixHT"
+              formControlName="prixHT"
+              [ngClass]="{'invalid': commandeForm.get('prixHT')?.invalid && commandeForm.get('prixHT')?.touched}"
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="tva">TVA (%) <span class="required">*</span></label>
+            <input
+              class="np"
+              type="number"
+              id="tva"
+              formControlName="tva"
+              min="5"
+              max="20"
+              [ngClass]="{'invalid': commandeForm.get('tva')?.invalid && commandeForm.get('tva')?.touched}"
+              (focus)="clearErrorMessage()"
+            />
+            <div class="error-message" *ngIf="tvaError">{{ tvaError }}</div>
+          </div>
+
+          <div class="form-group">
+            <label for="situationId">Situation <span class="required">*</span></label>
+            <select
+              class="np"
+              id="situationId"
+              formControlName="situationId"
+              [ngClass]="{'invalid': commandeForm.get('situationId')?.invalid && commandeForm.get('situationId')?.touched}"
+              (focus)="clearErrorMessage()"
+              >
+              <option value="">Sélectionnez une situation</option>
+               <option *ngFor="let situation of situations" [ngValue]="situation.id">{{ situation.nomSituation }}</option>
+            </select>
+           
+
+          </div>
+
+          
+
+          <div class="form-group">
+            <label for="dateCommande">Date de Commande <span class="required">*</span></label>
+            <input
+              class="np"
+              type="date"
+              id="dateCommande"
+              formControlName="dateCommande"
+              [ngClass]="{'invalid': commandeForm.get('dateCommande')?.invalid && commandeForm.get('dateCommande')?.touched}"
+              (focus)="clearErrorMessage()"
+            />
+            <div class="error-message" *ngIf="dateError">{{ dateError }}</div>
+          </div>
+           <div class="form-group description-group">
+          <label for="description">Description <span class="required">*</span></label>
+          <textarea
+            class="np description-textarea"
+            id="description"
+            formControlName="description"
+            [ngClass]="{'invalid': commandeForm.get('description')?.invalid && commandeForm.get('description')?.touched}"
+            (focus)="clearErrorMessage()"
+          ></textarea>
+        </div>
+        </div>
+
+       
+
+        <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">Modifier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

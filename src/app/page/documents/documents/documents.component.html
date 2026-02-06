@@ -1,0 +1,91 @@
+<div class="chantier-detail-container">
+  <div class="breadcrumb">
+    <span class="breadcrumb-part" [routerLink]="['/accueil/chantiers']">Chantiers</span>
+    <span class="breadcrumb-part clickable" [routerLink]="['/accueil/chantiers', chantierId]">{{ chantierTitre }}</span>
+    <span class="breadcrumb-part">Documents du chantier</span>
+  </div>
+
+  <div class="content">
+    <!-- Missing Contract Alert -->
+    <div *ngIf="missingContractAlert" class="contract-alert">
+      <span>⚠️ Attention : Vous n'avez pas téléchargé de contrat. Veuillez ajouter un contrat.</span>
+    </div>
+
+    <!-- Success Modal -->
+    <div *ngIf="isSuccessDelete" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le document a été supprimé avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards-container">
+      <div class="row first-row">
+       
+
+        <!-- Document Cards -->
+        <div *ngFor="let doc of documentsToDisplay" class="card">
+          <div class="card-content" (click)="downloadDocument(doc.id)">
+            <i class="fas text-1.5rem" [ngClass]="getFileIcon(doc.fileName)"></i>
+            <p class="text-sm text-gray-600 mt-2 truncate">{{ doc.fileName }}</p>
+            <button class="delete-btn" (click)="openDeleteConfirmModal(doc.id); $event.stopPropagation()">
+              <i class="fas fa-trash" *ngIf="role === 'Administrateur' || role === 'Chargé commercial'"></i>
+            </button>
+          </div>
+        </div>
+
+         <!-- Upload Card -->
+        <div class="card upload-card" *ngIf="role === 'Administrateur' || role === 'Chargé commercial'">
+          <div class="card-content">
+            <input type="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" class="hidden" id="fileInput" />
+            <label for="fileInput" class="cursor-pointer text-center">
+              <i class="fas fa-cloud-upload-alt text-3xl text-gray-400"></i>
+              <p class="text-sm text-gray-600 mt-2">Parcourir</p>
+            </label>
+            <div class="checkbox-container mt-2">
+              <input type="checkbox" id="markAsContract" [(ngModel)]="markAsContract" />
+              <label for="markAsContract" class="checkbox-label text-sm ml-2">Marquer comme contrat</label>
+            </div>
+            <button *ngIf="selectedFile" (click)="uploadDocument()" 
+                    class="import-btn mt-2">
+                    Importer
+            </button>
+          </div>
+        </div>
+      </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div *ngIf="showDeleteConfirmModal" class="modal-overlay confirm-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="confirm-content">
+            <div class="warning-icon">⚠️</div>
+            <p>Êtes-vous sûr de vouloir supprimer ce document ?</p>
+            <div class="confirm-actions">
+              <button class="cancel-btn" (click)="cancelDelete()">Annuler</button>
+              <button class="confirm-btn" (click)="confirmDelete()">Confirmer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="documents.length > 0">
+    <span>Page</span>
+    <button class="page-arrow" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+      <
+    </button>
+    <span class="page-number">{{ currentPage }}</span>
+    <button class="page-arrow" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+      >
+    </button>
+  </div>
+</div>

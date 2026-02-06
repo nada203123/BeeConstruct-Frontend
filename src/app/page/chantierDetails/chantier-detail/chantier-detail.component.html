@@ -1,0 +1,87 @@
+<!-- chantier-detail.component.html -->
+<div class="chantier-detail-container">
+  <!-- Main Content Section -->
+  <div class="content-section">
+    <!-- Left Column: Project Details and Client Details -->
+    <div class="left-column">
+      <!-- Project Details Card -->
+      <div class="details-card">
+        <h2>Détails chantier :</h2>
+        <ul>
+          <li>Localisation : {{ chantierDetails.localisation }}</li>
+          <li>Date de démmarage : {{ chantierDetails.dateDeDebut !== '-' ? (chantierDetails.dateDeDebut | date:'dd/MM/yyyy') : '-' }}</li>
+          <li>Société : {{ chantierDetails.client }}</li>
+        </ul>
+      </div>
+      
+   
+    </div>
+    
+    <!-- Middle Column: Stats Cards -->
+    <div class="middle-column">
+      <div class="stats-card">
+        <p>Total du marché :</p>
+        <h3>{{ chantierDetails.coutTotal }} €</h3>
+      </div>
+      
+      <div class="stats-card">
+        <p>Cumul part Beehive :</p>
+        <h3>{{ chantierDetails.cumulPartBeehive !== '0' ? (chantierDetails.cumulPartBeehive) : '0' }} €</h3>
+      </div>
+      
+      
+    </div>
+    
+    <!-- Right Column: Map -->
+    <div class="right-column">
+      <div id="map-container" class="map-container" *ngIf="chantierDetails?.coordinates">
+        <!-- Leaflet map will be dynamically loaded here -->
+      </div>
+      <div *ngIf="!chantierDetails?.coordinates" class="map-placeholder">
+        Aucune localisation disponible
+      </div>
+    </div>
+  </div>
+  
+  <!-- Navigation Cards Section -->
+  <div class="navigation-section">
+    <div class="nav-card" (click)="navigateTo('documents')">
+      <img src="assets/images/documents.jpeg" alt="Documents du chantier">
+      <p>Documents du chantier</p>
+    </div>
+    
+    <div class="nav-card"  *ngIf="(role === 'Administrateur' || role === 'Chargé de production') && typeChantier !== 'MAIN_D_OEUVRE'" (click)="navigateTo('marchandises')" >
+      <img src="assets/images/marchandises.jpeg" alt="Marchandises">
+      <p>Marchandises</p>
+    </div>
+    
+    <div class="nav-card" (click)="navigateTo('situations')" *ngIf="role === 'Administrateur' || role === 'Chargé de production'">
+      <img src="assets/images/avancement.jpeg" alt="Données avancement">
+      <p>Données avancement</p>
+    </div>
+    
+    <div class="nav-card" (click)="navigateTo('pointage')">
+      <img src="assets/images/pointage.jpeg" alt="Pointage">
+      <p>Pointage</p>
+    </div>
+    
+    <div class="nav-card" (click)="navigateTo('salaires')" *ngIf="role === 'Administrateur' || role === 'Chargé de production'">
+      <img src="assets/images/salaire.jpg" alt="Salaires">
+      <p>Salaires</p>
+    </div>
+  </div>
+
+
+
+  <div *ngIf="showNoAvancement" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="warning-icon">⚠️</div>
+            
+            <p>Aucune donnée d'avancement n'est disponible. Veuillez saisir le coût total du chantier pour y accéder.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

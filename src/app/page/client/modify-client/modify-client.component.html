@@ -1,0 +1,107 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Modifier le client</h2>
+      <button class="close-btn" (click)="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="editedClientForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="societe">Société <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="societe"
+              formControlName="societe"
+              [ngClass]="{'invalid': editedClientForm.get('societe')?.invalid && editedClientForm.get('societe')?.touched}" 
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="siegeSocial">Siège social <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="siegeSocial"
+              formControlName="siegeSocial"
+              [ngClass]="{'invalid': editedClientForm.get('siegeSocial')?.invalid && editedClientForm.get('siegeSocial')?.touched}" 
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <input
+              class="np"
+              type="text"
+              id="adresse"
+              formControlName="adresse"
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+          
+          <div class="form-group">
+            <label for="directeurExploitation">Directeur d'exploitation <span class="required">*</span></label>
+            <input
+              class="np"
+              type="text"
+              id="directeurExploitation"
+              formControlName="directeurExploitation"
+              [ngClass]="{'invalid': editedClientForm.get('directeurExploitation')?.invalid && editedClientForm.get('directeurExploitation')?.touched}" 
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+        </div>
+        
+        <div class="form-group telephone-container">
+          <label for="telephone">Téléphone</label>
+          <div class="phone-input-wrapper">
+            <div class="country-code-select">
+              <button
+                type="button"
+                class="country-code-button"
+                (click)="toggleCountryCodeDropdown()"
+              >
+                <img [src]="selectedCountryCode.flag" class="flag-icon">
+                {{ selectedCountryCode.code }}
+              </button>
+              
+              <div 
+                class="country-code-dropdown" 
+                *ngIf="isCountryCodeDropdownOpen"
+              >
+                <div 
+                  *ngFor="let country of countryCodes" 
+                  class="country-code-item"
+                  (click)="selectCountryCode(country)"
+                >
+                  <img [src]="country.flag" class="flag-icon">
+                  {{ country.code }} 
+                </div>
+              </div>
+            </div>
+            <input
+              type="tel"
+              id="telephone"
+              class="inputPhone"
+              formControlName="telephone"
+              (focus)="clearErrorMessage()"
+            />
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            Modifier
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+.sidebar {
+  width: 100%;
+  height: 92vh;
+  background-color: #FFF5EB;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  border-radius: 20px;
+}
+
+.logo-container {
+   display: flex;
+  align-items: center;  /* vertical alignment */
+  gap: 10px;            /* space between icon and text */
+  height: 90px;
+  padding-left: 10px;
+}
+
+.logo {
+ display: flex;
+  align-items: center;
+}
+
+
+
+.logo-img {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* These styles are no longer needed since the text was removed */
+.logo-text {
+   font-size: 23px;
+  font-weight: bold;
+font-family: "Source Sans Pro", "Nunito Sans", "Inter", Arial, sans-serif;
+
+
+
+  margin-top: 24px;
+  margin-left: 5px;
+  
+}
+
+.logo-text .bee {
+  color: #f28c40;   /* orange */
+  
+}
+
+.logo-text .construct {
+  color: #101010;      /* black */
+}
+
+.menu {
+  flex: 1;
+  position: relative; 
+  z-index: 1;
+  margin-top: 30px;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.menu li a {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: #666;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.menu li:hover a {
+  background-color: rgba(230, 126, 34, 0.1);
+  color: #E67E22;
+}
+
+.menu li.active a {
+  background-color: #E67E22;
+  color: white;
+  border-radius: 30px 30px 30px 30px;
+  margin-left: 5px;
+  margin-right: 10px;
+}
+
+.icon {
+  margin-right: 15px;
+  width: 20px;
+  text-align: center;
+}
+
+.logout {
+  margin-top: auto;
+  padding: 20px;
+}
+
+.logout a {
+  display: flex;
+  align-items: center;
+  color: #666;
+  text-decoration: none;
+  padding: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logout a:hover {
+  color: #E67E22;
+}
+
+.logout .icon {
+  margin-right: 15px;
+}
+
+.fa.fa-sign-out-alt {
+  margin-right: 10px;
+}

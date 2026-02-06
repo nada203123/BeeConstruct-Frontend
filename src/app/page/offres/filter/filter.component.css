@@ -1,0 +1,258 @@
+/* filter-bar.component.scss */
+.filter-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin-top: -1rem;
+margin-bottom: 1.2rem;
+background-color: #f4f3f3;
+border-radius: 12px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+transition: all 0.3s ease;
+
+  width: 1220;  
+  min-width: fit-content; /* Ensure minimum width fits content */
+  max-width: 1220px; /* Maximum width for the filter container */
+  flex-wrap: wrap; /* Optional: prevent container from exceeding parent width */
+
+}
+
+.filter-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #333;
+font-size: 1rem;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+
+i {
+  font-size: 1.2rem;
+  color: #5c5652;
+  transition: transform 0.3s ease;
+}
+
+&:hover i {
+  transform: scale(1.1);
+}
+}
+
+.filter-options {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  
+}
+
+.filter-dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 25px;
+  padding: 0.35rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #444;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  /* margin-top: 4px; */
+
+  width: auto; /* Allow width to adjust automatically */
+  min-width: fit-content; /* Ensure minimum width fits content */
+  max-width: 250px; /* Optional: set max width to prevent overly wide buttons */
+  white-space: nowrap;
+   position: relative;
+  overflow: hidden;
+  
+
+  &:hover {
+    background-color: #fff;
+    color: #444;
+    border-color: #F27A3F;
+    transform: translateY(-2px);
+  }
+
+  i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+    margin-right: -8px;
+  }
+
+  &:hover i {
+    transform: rotate(180deg);
+  }
+}
+
+
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  min-width: 280px;
+  margin-top: 0.75rem;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-content {
+  padding: 1rem;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 0 0 1rem;
+  color: #222;
+font-weight: 600;
+}
+
+.client-buttons,
+.localisation-buttons,
+.type-buttons,
+.statut-buttons {
+  display: flex;
+  flex-direction: column;
+  
+  gap: 0.3rem;
+   max-height: 200px;
+  overflow-y: auto;
+  
+  button {
+    background-color: #f8f8f8;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #444;
+    transition: all 0.3s ease;
+    position: relative;
+  overflow: hidden;
+
+    &:hover,
+    &.selected {
+      background-color: #F27A3F;
+      color: #fff;
+      border-color: #F27A3F;
+      transform: translateY(-2px);
+      box-shadow: 0 3px 8px rgba(242, 122, 63, 0.2);
+    }
+  }
+}
+
+.filter-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.15rem;
+  
+  align-items: center;
+
+  
+ 
+}
+
+
+
+.reset-btn {
+  background-color: transparent;
+  border: 1px solid #F27A3F;
+  color: #F27A3F;
+  border-radius: 20px;
+  padding: 0.35rem 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+
+  i {
+    font-size: 0.9rem;
+  }
+
+  &:hover {
+    background-color: #F27A3F;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+}
+
+.apply-btn {
+  background-color: transparent;
+  border: 1px solid #F27A3F;
+  color: #F27A3F;
+  border-radius: 20px;
+padding: 0.35rem 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  i {
+    font-size: 0.9rem;
+  }
+
+  &:hover {
+    background-color: #F27A3F;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+}
+
+
+
+@media (max-width: 1300px) {
+  .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 1rem;
+  }
+  
+  .filter-options {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .filter-actions {
+    margin-left: 0;
+    justify-content: center;
+  }
+  
+  .dropdown-toggle {
+    justify-content: space-between;
+    width: 100%;
+  }
+}

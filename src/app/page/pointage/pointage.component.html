@@ -1,0 +1,136 @@
+<div class="breadcrumb">
+  <span class="breadcrumb-part" (click)="navigateToChantierCards()"
+    >Chantiers</span
+  >
+  >
+  <span
+    class="breadcrumb-part clickable"
+    (click)="navigateToChantierDetails()"
+    >{{ chantier.titre }}</span
+  >
+  >
+  <span class="breadcrumb-part">Pointage</span>
+</div>
+
+<!-- Main content -->
+<div class="main-content">
+  <!-- Control bar -->
+  <div class="control-bar">
+    <div class="month-selector">
+      <select (change)="onMonthChange($event)" [value]="getCurrentMonthYear()">
+        <option value="">Sélectionner une situation</option>
+        <ng-container *ngIf="monthOptions.length > 0; else noSituations">
+          <option
+            *ngFor="let monthOption of monthOptions"
+            [value]="monthOption"
+          >
+            {{ monthOption | date : "d MMMM yyyy" }}
+          </option>
+        </ng-container>
+        <ng-template #noSituations>
+          <option value="" disabled>Aucune situation trouvée</option>
+        </ng-template>
+      </select>
+    </div>
+
+    <div class="employee-selector">
+      <select (change)="onEmployeeChange($event)" [value]="selectedEmployee">
+        <option value="">Sélectionner un employé</option>
+        <ng-container *ngIf="selectedSituation">
+          <ng-container *ngIf="employees.length > 0; else noEmployees">
+            <option *ngFor="let emp of employees" [value]="emp.id">
+              {{ emp.prenom }} {{ emp.nom }} 
+            </option>
+          </ng-container>
+          <ng-template #noEmployees>
+            <option value="" disabled>Aucun employé trouvé</option>
+          </ng-template>
+        </ng-container>
+        <ng-container *ngIf="!selectedSituation">
+          <option value="" disabled>
+            Veuillez d'abord sélectionner une situation
+          </option>
+        </ng-container>
+      </select>
+    </div>
+    <div *ngIf="hasSelections && (role === 'Administrateur' || role === 'Chargé commercial')" class="day-checkbox">
+  <input 
+    type="checkbox" 
+    id="fillAllDays"
+    [(ngModel)]="fillAllDaysChecked"
+    (change)="onFillAllDaysChange($event)"
+  />
+  <h3 >Remplir tous les jours (8h)</h3>
+</div>
+
+ 
+  </div>
+
+  <!-- Show message when no selections -->
+  <div *ngIf="!hasSelections" class="selection-message">
+    <p>Veuillez sélectionner une situation et un employé</p>
+  </div>
+
+   <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+  <!-- Content area -->
+  <div *ngIf="hasSelections" class="content-area">
+    <!-- Calendar -->
+    <div class="calendar-container">
+      <div class="calendar-grid" [ngStyle]="errorMessage ? { 'padding-top': '0' } : { 'padding-top': '33px' }">
+        <!-- Calendar rows for each week -->
+        <div *ngFor="let week of weekGroups" class="calendar-week">
+          <!-- Day headers -->
+          <div
+            class="day-header"
+            *ngFor="let day of week.days"
+           [class.unselectable]="!day.isInPeriod "
+            [class.in-period]="day.isInPeriod"
+            [class.selected]="isDaySelected(day)"
+          >
+            {{ day.dayLetter }}
+            {{ day.dayNumber }}
+          </div>
+
+          <!-- Day cells -->
+          <div
+            *ngFor="let day of week.days"
+            class="day-cell"
+            [class.current-month]="day.isCurrentMonth"
+            [class.other-month]="!day.isCurrentMonth"
+            [class.unselectable]="!day.isInPeriod"
+            [class.in-period]="day.isInPeriod"
+            [class.selected]="isDaySelected(day)"
+            (click)="day.isSelectable && onDayClick(day)"
+          >
+            <div class="hours-input-container">
+              <input
+                class="hours-input"
+                [value]="getWorkedHours(day)"
+                [disabled]="!day.isSelectable || !selectedEmployee || role === 'Chargé de production'"
+                (change)="onHoursChange(day, $any($event.target).value)"
+                
+              />
+              <span class="hours-label">h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary section -->
+    <div class="summary-section">
+      <div class="summary-item">
+        <label>Total d'activité par heure :</label>
+        <span class="summary-value">{{ totalActiviteParHeure || "-" }}</span>
+      </div>
+
+      <div class="summary-item">
+        <label>Total d'activité par jour :</label>
+        <span class="summary-value">{{ totalActiviteParJour || "-" }}</span>
+      </div>
+    </div>
+  </div>
+</div>

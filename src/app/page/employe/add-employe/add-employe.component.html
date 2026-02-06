@@ -1,0 +1,115 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Ajouter un employé</h2>
+      <button class="close-btn" (click)="onClose()">×</button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="employeForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+         
+          <ng-container>
+            <div class="form-group">
+              <label for="lastName">Nom <span class="required">*</span></label>
+              <input
+                class="np"
+                type="text"
+                id="lastName"
+                formControlName="lastName"
+                [ngClass]="{'invalid': employeForm.get('lastName')?.invalid && employeForm.get('lastName')?.touched}"
+                (focus)="clearErrorMessage()"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="firstName">Prénom <span class="required">*</span></label>
+              <input
+                class="np"
+                type="text"
+                id="firstName"
+                formControlName="firstName"
+                [ngClass]="{'invalid': employeForm.get('firstName')?.invalid && employeForm.get('firstName')?.touched}"
+                (focus)="clearErrorMessage()"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="telephone">Numéro du téléphone <span class="required">*</span></label>
+              <div class="phone-input-wrapper">
+                <div class="country-code-select">
+                  <button
+                    type="button"
+                    class="country-code-button"
+                    (click)="toggleCountryCodeDropdown()"
+                  >
+                    <img [src]="selectedCountryCode.flag" class="flag-icon">
+                    {{ selectedCountryCode.code }}
+                  </button>
+                  <div 
+                    class="country-code-dropdown" 
+                    *ngIf="isCountryCodeDropdownOpen"
+                  >
+                    <div 
+                      *ngFor="let country of countryCodes" 
+                      class="country-code-item"
+                      (click)="selectCountryCode(country)"
+                    >
+                      <img [src]="country.flag" class="flag-icon">
+                      {{ country.code }} 
+                    </div>
+                  </div>
+                </div>
+                <input
+                  type="tel"
+                  id="telephone"
+                  class="inputPhone"
+                  formControlName="telephone"
+                  [ngClass]="{'invalid': employeForm.get('telephone')?.invalid && employeForm.get('telephone')?.touched}"
+                  (focus)="clearErrorMessage()"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="adresse">Adresse <span class="required">*</span></label>
+              <input
+                class="np"
+                type="text"
+                id="adresse"
+                formControlName="adresse"
+                [ngClass]="{'invalid': employeForm.get('adresse')?.invalid && employeForm.get('adresse')?.touched}"
+                (focus)="clearErrorMessage()"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="rib">RIB <span class="required">*</span></label>
+              <input
+                class="np"
+                type="text"
+                id="rib"
+                formControlName="rib"
+                [ngClass]="{'invalid': employeForm.get('rib')?.invalid && employeForm.get('rib')?.touched}"
+                (focus)="clearErrorMessage()"
+              />
+            </div>
+
+           
+          </ng-container>
+
+        
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn">
+            Ajouter
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

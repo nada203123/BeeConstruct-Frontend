@@ -1,0 +1,289 @@
+<div class="offre-list-container">
+  <div class="title-wrapper">
+    <h1 class="page-title advanced-title">Liste des chantiers en prospection</h1>
+  </div>
+
+  <div class="header-line">
+    <div class="search-bar">
+      <span class="search-icon"><i class="fas fa-search"></i></span>
+      <input
+        type="text"
+        placeholder="Rechercher..."
+        [(ngModel)]="searchQuery"
+        (input)="search()"
+        class="search-input"
+      />
+    </div>
+    <div class="notification-wrapper">
+      <app-notification-component></app-notification-component>
+    </div>
+    <button class="add-offre-btn" (click)="openAddOffreModal()" *ngIf="canPerformActions">
+      <span class="plus-icon">+</span>Ajouter un chantier
+    </button>
+  </div>
+
+  <div class="filter">
+    <app-filter [refreshTrigger]="refreshFilters" (filterApplied)="onFilterApplied($event)"></app-filter>
+  </div>
+
+  <div class="content">
+    <div *ngIf="isSuccess" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le Chantier en prospection a été ajouté avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showArchiveConfirmModal" class="modal-overlay confirm-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="confirm-content">
+            <div class="warning-icon">⚠️</div>
+            <p>Êtes-vous sûr de vouloir archiver ce chantier en prospection ?</p>
+            <div class="confirm-actions">
+              <button class="cancel-btn" (click)="cancelArchive()">Annuler</button>
+              <button class="confirm-btn" (click)="confirmArchive()">Confirmer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessModified" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le Chantier en Prospection a été modifié avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessArchive" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Le Chantier en prospection a été archivée avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isSuccessEvent" class="modal-overlay success-modal">
+      <div class="modal-container">
+        <div class="modal-body">
+          <div class="success-content">
+            <div class="check-circle">
+              <span class="check-icon">✔</span>
+            </div>
+            <p>Un événement a été ajouté avec succès.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay form-modal" *ngIf="showModifyOffreModal">
+      <app-modify-offre
+        [offre]="selectedOffre"
+        (close)="closeModifyOffreModal()"
+        (update)="updateOffre()"
+      ></app-modify-offre>
+    </div>
+
+    <div class="table-wrapper">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th class="chantier-col">Chantier </th>
+              <th>Client</th>
+              <th>Localisation</th>
+              <th>Statut</th>
+              <th>Date de demande</th>
+              <th>Type</th>
+              <th>Devis</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngIf="filteredOffres.length > 0">
+              <tr *ngFor="let offre of offresToDisplay" (click)="toggleHistorique(offre.id)" [class.highlight-row]="highlightedOffres[offre.id]" [title]="highlightedOffres[offre.id] ? 'Cette offre n\'a pas été mise à jour depuis plus de 30 jours' : ''">
+                <td>{{ offre.titre }}</td>
+                <td><span (click)="showClientDetails(offre.id); $event.stopPropagation()" class="client-name">{{ getClientName(offre.id) }}</span></td>
+                <td>{{ offre.localisation }}</td>
+                <td class="status">
+                  <div class="status-container">
+                    <div class="status-badge" 
+                         [ngClass]="formatStatus(offre.statutOffre).toLowerCase().replace(' ', '-')"
+                         (click)="toggleDropdown(offre); $event.stopPropagation()">
+                      {{ formatStatus(offre.statutOffre) }}
+                      <i class="dropdown-icon" *ngIf="canPerformActions">▼</i>
+                    </div>
+                    <div class="status-dropdown" *ngIf="offre.showDropdown && canPerformActions">
+                      <div class="dropdown-item" 
+                           *ngFor="let statut of statutOptions" 
+                           (click)="updateOffreStatus(offre, statut.value); $event.stopPropagation()">
+                        {{ statut.label }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="date">{{ formatDateFR(offre.dateDemande) }}</td>
+                <td class="type">{{ formatType(offre.type) }}</td>
+                <td class="devis-file" style="width: 180px;">
+                  <div class="file-content" *ngIf="offre.fileName; else noDevis">
+                    <div class="file-info">
+                      <div class="file-icon">
+                        <i [class]="getFileIconClass(offre.fileName)"></i>
+                      </div>
+                      <span class="file-name" [title]="offre.fileName" (click)="downloadFile(offre.id, offre.fileName); $event.stopPropagation()">{{ offre.fileName }}</span>
+                    </div>
+                  </div>
+                  <ng-template #noDevis>
+                    -
+                  </ng-template>
+                </td>
+                <td *ngIf="canPerformActions">
+                  <div class="action-buttons">
+                    <button class="action-btn add-btn" (click)="openAdjustmentModal(offre.id); $event.stopPropagation()" title="Ajouter un événement">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="action-btn edit-btn" (click)="editOffre(offre.id); $event.stopPropagation()" title="Modifier">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn" (click)="openArchiveConfirmModal(offre.id); $event.stopPropagation()" title="Archiver">
+                      <i class="fas fa-archive"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+            <tr *ngIf="filteredOffres.length === 0">
+              <td colspan="6" class="no-results">Aucune chantier en prospection trouvé</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="client-modal" *ngIf="showClientModal">
+      <div class="modal-content">
+        <span class="close-btn" (click)="showClientModal = false">×</span>
+        <h2>{{ selectedClient?.nomSociete }}</h2>
+        <div class="client-info">
+          <p><strong>Siége Social:</strong> {{ selectedClient?.siegeSocial }}</p>
+          <p><strong>Directeur d’exploitation:</strong> {{ selectedClient?.nomDirecteur }} {{ selectedClient?.prenomDirecteur }}</p>
+          <p><strong>Téléphone:</strong> {{ selectedClient?.telephoneDirecteur }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination" *ngIf="filteredOffres.length > 0">
+      <span>Page</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        <
+      </button>
+      <span class="page-number current">{{ currentPage }}</span>
+      <button
+        class="page-arrow"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        >
+      </button>
+    </div>
+
+    <div *ngIf="showHistoryModal" class="modal-overlayH history-modal">
+      <div class="modal-containerH">
+        <div class="modal-headerH">
+          <h2>Historique des événements</h2>
+          <button class="close-btnH" (click)="closeHistoryModal()">×</button>
+        </div>
+        <div class="modal-bodyH">
+          <div *ngIf="selectedOffreHistory.length === 0" class="empty-historyH">
+            Aucun historique disponible pour ce devis.
+          </div>
+          <table *ngIf="selectedOffreHistory.length > 0" class="history-tableH">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th class="comment">Commentaire</th>
+                <th>Devis</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedOffreHistory" class="history-rowH">
+                <td class="history-date">{{item.createdAt | date:'d MMMM y'}}</td>
+                <td class="history-comment" (click)="toggleComment(item)" [class.expanded]="item.showFullComment">
+                  <span *ngIf="item.comment.length > 50 && !item.showFullComment" class="truncated-text">{{ item.comment | slice:0:50 }}...</span>
+                  <span *ngIf="item.comment.length > 50 && item.showFullComment" class="full-text">{{ item.comment }}</span>
+                  <span *ngIf="item.comment.length <= 50">{{ item.comment }}</span>
+                </td>
+                <td class="history-file">
+                  <a *ngIf="item.filePath" [href]="item.filePath" target="_blank" class="file-link">
+                    <i class="fas fa-file-alt"></i> {{item.originalFileName || 'Document'}}
+                  </a>
+                  <span *ngIf="!item.filePath">-</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="showAdjustmentModal" class="modal-overlayA adjustment-modal">
+      <div class="modal-containerA">
+        <div class="modal-headerA">
+          <h2>Ajouter un événement</h2>
+          <button class="close-btnA" (click)="closeAdjustmentModal()">×</button>
+        </div>
+        <div class="modal-bodyA">
+          <form (ngSubmit)="submitAdjustment()" enctype="multipart/form-data"> 
+            <div class="form-groupA">
+              <label for="file">Devis</label>
+              <div class="custom-file-upload">
+                <input type="file" id="file" (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" required>
+                <span class="upload-label">
+                  <i class="fas fa-upload upload-icon"></i>
+                  {{ selectedFileName }}
+                </span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="comment">Commentaire</label>
+              <textarea id="comment" [(ngModel)]="adjustmentComment" name="comment" rows="4" required></textarea>
+            </div>
+            <div *ngIf="errorMessage" class="error-messageA">{{ errorMessage }}</div>
+            <div class="form-actionsA">
+              <button type="submit" class="submit-btnA">Confirmer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay form-modal" *ngIf="showAddOffreModal">
+      <app-add-offre
+        (close)="closeAddOffreModal()"
+        (offreAdded)="onOffreAdded()"
+      ></app-add-offre>
+    </div>
+  </div>
+</div>

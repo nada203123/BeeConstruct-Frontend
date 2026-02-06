@@ -1,0 +1,156 @@
+<!-- statistique.component.html -->
+<div class="dashboard-container">
+  <h1 class="dashboard-title">Dashboard</h1>
+
+  <!-- Stats Cards Row -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon part-beehive">
+        <img
+          src="../../../../assets/images/salary.png"
+          alt="Chantier Icon"
+          width="40"
+          height="40"
+          color="#E67E22"
+        />
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Part BeeHive</p>
+        <p class="stat-value">{{ partBeeHive | number }} €</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon chantier">
+        <img
+          src="../../../../assets/images/construction.png"
+          alt="Chantier Icon"
+          width="40"
+          height="40"
+          color="#E67E22"
+        />
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Chantiers</p>
+        <p class="stat-value">{{ chantiers }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon clients">
+        <img
+          src="../../../../assets/images/customers.png"
+          alt="Chantier Icon"
+          width="40"
+          height="40"
+          color="#E67E22"
+        />
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Clients</p>
+        <p class="stat-value">{{ clients }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon employes">
+        <img
+          src="../../../../assets/images/engineer.png"
+          alt="Chantier Icon"
+          width="40"
+          height="40"
+          color="#E67E22"
+        />
+      </div>
+      <div class="stat-content">
+        <p class="stat-label">Employés</p>
+        <p class="stat-value">{{ employes }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-row">
+    
+    <!-- Prospection Chart -->
+    <div class="chart-container">
+      <h3 class="chart-title">
+        Nombre des chantiers en prospection par statut
+      </h3>
+      <div class="bar-chart" *ngIf="hasProspectionData; else noData">
+        <div class="chart-y-axis">
+          <span class="y-label">10</span>
+          <span class="y-label">5</span>
+          <span class="y-label">1</span>
+        </div>
+        <div class="chart-bars">
+          <div class="bar-group" *ngFor="let item of prospectionData">
+        
+              <div  *ngIf="item.value > 0"
+                class="bar"
+                [style.height.px]="item.value * 20"
+               
+              >
+              <span class="bar-value">{{ item.value }}</span>
+            </div>
+            
+              <span class="bar-label">{{ item.status }}</span>
+            
+          </div>
+        </div>
+      </div>
+        <ng-template #noData>
+    <p class="no-data">Aucune donnée disponible</p>
+  </ng-template>
+    </div>
+
+    <!-- Charges Chart -->
+   <div class="chart-container">
+  <h3 class="chart-title">Total des charges</h3>
+  <div class="line-chart" *ngIf="hasChargesData; else noData">
+    <div class="chart-y-axis-right">
+<span class="y-label" *ngFor="let label of getYAxisLabels()">
+  <ng-container *ngIf="label !== '0' && label !== '0K'">
+    {{ label }}
+  
+  </ng-container>
+</span>
+    </div>
+    
+    <div class="chart-area">
+      <div class="chart-line">
+         <svg class="connecting-line" xmlns="http://www.w3.org/2000/svg">
+    <polyline
+      [attr.points]="getPolylinePoints()"
+      fill="none"
+      stroke="#ff6b35"
+      stroke-width="2"
+    />
+  </svg>
+        <div
+          class="line-point"
+          *ngFor="let item of chargesData; let i = index"
+          [style.left.%]="(i / (chargesData.length - 1)) * 100"
+          [style.bottom.%]="getBarHeight(item.value)"
+        >
+          <span class="point-value">
+            {{ item.value >= 1000 ? (item.value / 1000) + 'k' : item.value }}
+          </span>
+        </div>
+      </div>
+     
+      <div
+    class="chart-labels"
+    *ngFor="let item of chargesData; let i = index"
+    [style.left.%]="(i / (chargesData.length - 1)) * 100"
+  >
+    {{ item.category }} 
+  </div>
+    </div>
+  </div>
+    <ng-template #noData>
+    <p class="no-data">Aucune donnée disponible</p>
+  </ng-template>
+</div>
+  </div>
+</div>

@@ -1,0 +1,110 @@
+<div class="filter-container">
+  <div class="filter-icon">
+    <i class="fas fa-filter"></i>
+    <span>Filter Par</span>
+  </div>
+  
+  <div class="filter-options">
+    <!-- Client Filter -->
+    <div class="filter-dropdown">
+      <button class="dropdown-toggle" (click)="toggleClientDropdown()">
+        {{ getSelectedClientText() }} <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-menu" *ngIf="showClientDropdown">
+        <div class="dropdown-content">
+          <div class="client-selection">
+            <h3>Sélectionner un client</h3>
+            <div class="client-buttons">
+              <button 
+                *ngFor="let client of clients" 
+                class="client-btn"
+                [class.selected]="selectedClientId === client.id"
+                (click)="selectClient(client)">
+                {{ client.nomSociete}} 
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Localisation Filter -->
+    <div class="filter-dropdown">
+      <button class="dropdown-toggle" (click)="toggleLocalisationDropdown()">
+        {{ getSelectedLocalisationText() }} <i class="fas fa-chevron-down"></i>
+      </button>
+      <div class="dropdown-menu" *ngIf="showLocalisationDropdown">
+        <div class="dropdown-content">
+          <div class="localisation-selection">
+            <h3>Sélectionner une localisation</h3>
+            <div class="localisation-buttons">
+              <button 
+                *ngFor="let localisation of localisations" 
+                class="localisation-btn"
+                [class.selected]="selectedLocalisation === localisation"
+                (click)="selectLocalisation(localisation)">
+                {{ localisation }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+   <!-- Statut Filter -->
+<div class="filter-dropdown">
+<button class="dropdown-toggle" (click)="toggleStatutDropdown()">
+  {{ getSelectedStatutText() }} <i class="fas fa-chevron-down"></i>
+</button>
+<div class="dropdown-menu" *ngIf="showStatutDropdown">
+  <div class="dropdown-content">
+    <div class="statut-selection">
+      <h3>Sélectionner un statut</h3>
+      <div class="statut-buttons">
+        <button 
+          *ngFor="let statut of statusOptions" 
+          class="statut-btn"
+          [class.selected]="selectedStatut === statut.value"
+          (click)="selectStatut(statut)">
+          {{ statut.display }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Type Filter (NOUVEAU corrigé) -->
+<div class="filter-dropdown">
+<button class="dropdown-toggle" (click)="toggleTypeDropdown()">
+   {{ getSelectedTypeText() }} <i class="fas fa-chevron-down"></i>
+</button>
+<div class="dropdown-menu" *ngIf="showTypeDropdown">
+  <div class="dropdown-content">
+    <div class="type-selection">
+      <h3>Sélectionner un type</h3>
+      <div class="type-buttons">
+        <button 
+          *ngFor="let type of typeOptions" 
+          class="type-btn"
+          [class.selected]="selectedType === type.value"
+          (click)="selectType(type)">
+          {{ type.display }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+  
+  <!-- Action Buttons -->
+  <div class="filter-actions">
+    <button class="reset-btn" (click)="resetFilters()">
+      <i class="fas fa-sync-alt"></i> réinitialiser le filtre
+    </button>
+    <button class="apply-btn" (click)="applyFilters()">
+      Appliquer
+    </button>
+  </div>
+</div>

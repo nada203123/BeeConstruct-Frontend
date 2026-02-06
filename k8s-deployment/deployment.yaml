@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beeconstruct-front-deployment  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beeconstruct-front  
+  template:
+    metadata:
+      labels:
+        app: beeconstruct-front  
+    spec:
+      containers:
+        - name: beeconstruct-front-container  
+          image: depot.dpc.com.tn:8443/beeconstruct/beeconstruct-front-dev:V-0.0.50
+          ports:
+            - containerPort: 80
+
+---
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: beeconstruct-front-service  
+spec:
+  selector:
+    app: beeconstruct-front  
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+
+---
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beeconstruct-front-ingress  # Change underscore to hyphen
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+  - host: dev.beeconstruct.dpc.com.tn
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: beeconstruct-front-service  # Change underscore to hyphen
+              port:
+                number: 80
+  tls:
+    - hosts:
+        - dev.beeconstruct.dpc.com.tn
+      secretName: beeconstruct-front-tls  # Change underscore to hyphen
+
+

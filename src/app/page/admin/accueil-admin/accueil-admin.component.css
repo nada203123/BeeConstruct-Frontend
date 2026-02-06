@@ -1,0 +1,30 @@
+.main-container {
+  display: flex;
+  height: 97vh;
+}
+
+.sidebar-container {
+  width: 250px;
+  flex-shrink: 0;
+  margin-bottom: 5px;
+  margin-top: 7px;
+  margin-left: 10px;
+}
+
+.content-container {
+  flex: 1;
+  position: relative;
+  padding-top: 1px; 
+}
+
+app-profile-menu {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 10; 
+}
+
+router-outlet {
+  display: block;
+  margin-top: 5px; 
+}

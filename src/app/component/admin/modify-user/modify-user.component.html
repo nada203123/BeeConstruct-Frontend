@@ -1,0 +1,141 @@
+<div class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Modifier un utilisateur</h2>
+      <button class="close-btn" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form [formGroup]="editedUserForm" (ngSubmit)="onSubmit()">
+        <div class="role-toggle">
+          <button 
+            type="button"
+            class="role-option" 
+            [class.active]="selectedRole === 'Administrateur'"
+            (click)="selectRole('Administrateur')">
+            Administrateur
+          </button>
+          <button 
+            type="button"
+            class="role-option" 
+            [class.active]="selectedRole === 'commercial'"
+            (click)="selectRole('commercial')">
+            Chargé commercial
+          </button>
+          <button 
+            type="button"
+            class="role-option" 
+            [class.active]="selectedRole === 'production'"
+            (click)="selectRole('production')">
+            Chargé de production
+          </button>
+        </div>
+
+        <div class="form-grid">
+          <!-- Replaced username with firstName and lastName -->
+          <div class="form-group">
+            <label for="firstName">Nom</label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              [class.invalid]="editedUserForm.get('firstName')?.invalid && editedUserForm.get('firstName')?.touched"
+              (focus)="clearErrorMessage()">
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Prénom</label>
+            <input
+              type="text"
+              id="lastName"
+              formControlName="lastName"
+              [class.invalid]="editedUserForm.get('lastName')?.invalid && editedUserForm.get('lastName')?.touched"
+              (focus)="clearErrorMessage()">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Adresse e-mail</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              [class.invalid]="editedUserForm.get('email')?.invalid && editedUserForm.get('email')?.touched"
+              (focus)="clearErrorMessage()">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Numéro de téléphone</label>
+            <div class="phone-input-wrapper">
+              <div class="country-code-select">
+                <button
+    type="button"
+    class="country-code-button"
+    (click)="toggleCountryCodeDropdown()"
+  >
+    <img [src]="selectedCountryCode.flag"  class="flag-icon">
+    {{ selectedCountryCode.code }}
+  </button>
+                
+                <div 
+                  class="country-code-dropdown" 
+                  *ngIf="isCountryCodeDropdownOpen"
+                >
+                  <div 
+                    *ngFor="let country of countryCodes" 
+                    class="country-code-item"
+                    (click)="selectCountryCode(country)"
+                  >
+                  <img [src]="country.flag"  class="flag-icon">
+                     {{ country.code }} 
+                  </div>
+                </div>
+              </div>
+            <input 
+            class="inputTEL"
+              type="tel" 
+              id="phone" 
+              formControlName="phoneNumber"
+              [class.invalid]="editedUserForm.get('phoneNumber')?.invalid && editedUserForm.get('phoneNumber')?.touched"
+              (focus)="clearErrorMessage()">
+          </div>
+</div>
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <div class="password-container">
+              <input 
+                [type]="showPassword ? 'text' : 'password'"
+                id="password" 
+                formControlName="password"
+                [class.invalid]="editedUserForm.get('password')?.invalid && editedUserForm.get('password')?.touched" (focus)="clearErrorMessage()">
+                
+              <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+        <p class="error-message" *ngIf="passwordFormatError">Le mot de passe doit contenir au moins 8 caractères, une majuscule, un chiffre et un caractère spécial.</p>
+
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" >Modifier</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
